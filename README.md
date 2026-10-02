@@ -51,6 +51,20 @@ Requirements: Node 22+, JDK 21 (Android Studio's bundled JBR 21 works), Android 
 
 APK: Android Studio, *Build > Build Bundle(s) / APK(s) > Build APK(s)*. For distribution use *Generate Signed App Bundle / APK*; never commit the signing key or its passwords.
 
+## Building for the live server
+
+Once the backend is deployed (see the backend repository's `DEPLOYMENT.md`) build a release that talks to it over HTTPS:
+
+```powershell
+copy .env.mobile.example .env.mobile      # set VITE_API_BASE_URL=https://api.alpharesearchlabs.org
+Remove-Item Env:CAP_CLEARTEXT -ErrorAction SilentlyContinue   # release builds are HTTPS-only
+npm ci
+npm run build:mobile
+npm run android:open
+```
+
+In Android Studio use *Build > Generate Signed App Bundle / APK* (create a keystore once and keep it, with its passwords, somewhere safe and out of git). The server already accepts the app's origin (`https://localhost`), so no server change is needed.
+
 ## Sign-in on the phone
 
 Browsers keep the refresh token in an httpOnly cookie; an app has no such cookie jar. The app sends `X-Client: native`, the backend returns the refresh token in the response body, and the app keeps it in Android Keystore-backed secure storage (`@aparajita/capacitor-secure-storage`), never in plain storage. It is rotated on every refresh and revoked on sign-out. The 30-minute access token lives in memory only. Losing the signal does not sign anyone out; an expired or revoked session does. This needs the backend in this submission (it adds the `X-Client` / `X-Refresh-Token` handling and the CORS headers).

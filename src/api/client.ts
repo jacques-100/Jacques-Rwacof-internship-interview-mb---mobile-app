@@ -105,7 +105,9 @@ async function send(path: string, opts: RequestOptions): Promise<Response> {
       method: opts.method ?? 'GET',
       headers,
       body: opts.body === undefined ? undefined : isForm ? (opts.body as FormData) : JSON.stringify(opts.body),
-      credentials: native ? 'omit' : 'same-origin',
+      // Same-origin by default. When the API lives on its own address (api.example.org beside www.example.org)
+      // the refresh cookie must be sent explicitly; it stays SameSite=Strict, so only the same site can use it.
+      credentials: native ? 'omit' : API_ORIGIN ? 'include' : 'same-origin',
       signal: controller.signal,
     })
   } catch (e) {
