@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+/*
+ * CherryTrack design system.
+ *
+ * Identity: a coffee washing station. Warm "parchment" neutrals instead of cold greys, a deep
+ * coffee-bean sidebar, cherry red as the single brand colour, and a serif display face (Fraunces)
+ * for headings and figures so numbers read like entries in a station ledger. Body text stays in a
+ * clean sans (Inter) for dense tables and forms.
+ *
+ * Re-defining the `stone` scale re-skins every component at once; components never hard-code hex.
+ */
+@theme {
+  --font-sans: "Inter Variable", "Inter", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-display: "Fraunces Variable", "Fraunces", Georgia, "Times New Roman", serif;
+
+  /* parchment & roast: warm neutrals */
+  --color-stone-50: #faf6f0;
+  --color-stone-100: #f3ece2;
+  --color-stone-200: #e7ddcf;
+  --color-stone-300: #d4c7b4;
+  --color-stone-400: #a99c89;
+  --color-stone-500: #85796a;
+  --color-stone-600: #655a4e;
+  --color-stone-700: #4d433a;
+  --color-stone-800: #372f28;
+  --color-stone-900: #261e19;
+  --color-stone-950: #17110e;
+
+  /* cherry */
+  --color-brand-50: #fdf1f2;
+  --color-brand-100: #fadde1;
+  --color-brand-200: #f4b9c2;
+  --color-brand-300: #ea8b9b;
+  --color-brand-400: #db5a73;
+  --color-brand-500: #c2304f;
+  --color-brand-600: #a11d3b;
+  --color-brand-700: #851731;
+  --color-brand-800: #6b1429;
+  --color-brand-900: #4f101f;
+
+  /* leaf: the accent for "done / paid / healthy" */
+  --color-leaf-50: #f1f6ec;
+  --color-leaf-600: #4b7a2a;
+  --color-leaf-800: #2f4f19;
+
+  --radius-sm: 4px;
+  --radius-md: 7px;
+  --radius-lg: 12px;
+
+  --shadow-card: 0 1px 0 rgb(38 30 25 / 0.04), 0 1px 3px rgb(38 30 25 / 0.06);
+  --shadow-pop: 0 14px 36px rgb(38 30 25 / 0.2);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-stone-50 text-stone-900 font-sans antialiased;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-stone-900;
+    font-variation-settings: "SOFT" 50, "WONK" 0;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+  }
+  button,
+  [role="button"],
+  a,
+  select,
+  summary {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  ::selection {
+    background: var(--color-brand-100);
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Figures in the display face: the "ledger numeral" look. */
+  .figure {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: "SOFT" 30;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  dialog::backdrop {
+    background: rgb(23 17 14 / 0.55);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Phones and tablets: touch-sized controls (44px minimum) and 16px text so the keyboard never zooms the page. */
+@media (pointer: coarse) {
+  button,
+  select,
+  input:not([type='checkbox']):not([type='radio']),
+  a.inline-flex {
+    min-height: 2.75rem;
+  }
+  input:not([type='checkbox']):not([type='radio']),
+  select,
+  textarea {
+    font-size: 1rem;
+  }
+  input[type='checkbox'],
+  input[type='radio'] {
+    min-width: 1.25rem;
+    min-height: 1.25rem;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * Themes. Every colour in the UI comes from the variables above, so dark mode is a second set of
+ * values rather than a second set of styles: the stone scale is inverted (page = deepest, text =
+ * lightest), brand and status tints are re-balanced for dark surfaces, and `--surface` replaces the
+ * white of cards, inputs and dialogs. The theme is chosen by the data-theme attribute on <html>
+ * (see theme/ThemeContext.tsx).
+ * ---------------------------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  --surface: #ffffff;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --surface: #1c1612;
+
+  --color-stone-50: #14100d;
+  --color-stone-100: #241d17;
+  --color-stone-200: #342b23;
+  --color-stone-300: #4a3f34;
+  --color-stone-400: #7a6e60;
+  --color-stone-500: #9a8e80;
+  --color-stone-600: #b8ad9f;
+  --color-stone-700: #d1c8ba;
+  --color-stone-800: #e5ddd0;
+  --color-stone-900: #f4eee5;
+  --color-stone-950: #faf6f0;
+
+  --color-brand-50: #2b1218;
+  --color-brand-100: #3d1822;
+  --color-brand-200: #5c2433;
+  --color-brand-300: #8a3347;
+  --color-brand-400: #db5a73;
+  --color-brand-500: #e0657e;
+  --color-brand-600: #c2304f;
+  --color-brand-700: #e0657e;
+  --color-brand-800: #ea8b9b;
+  --color-brand-900: #f4b9c2;
+
+  --color-leaf-50: #14210e;
+  --color-leaf-600: #7fbf55;
+  --color-leaf-800: #b6dd98;
+
+  --color-amber-50: #2a1d08;
+  --color-amber-100: #3a2a0c;
+  --color-amber-200: #4f3a10;
+  --color-amber-300: #7a5a14;
+  --color-amber-400: #d99a2b;
+  --color-amber-600: #e0a030;
+  --color-amber-700: #f0b955;
+  --color-amber-800: #f6cf86;
+  --color-amber-900: #fbe3b0;
+  --color-amber-950: #fdf0d3;
+
+  --color-green-50: #12220f;
+  --color-green-100: #1a3016;
+  --color-green-200: #244a1f;
+  --color-green-300: #2f6a2b;
+  --color-green-400: #5bbf5a;
+  --color-green-700: #86d385;
+  --color-green-900: #c8eec7;
+  --color-green-950: #e4f7e3;
+
+  --color-sky-50: #0d2230;
+  --color-sky-100: #123246;
+  --color-sky-200: #1a4a66;
+  --color-sky-300: #26688f;
+  --color-sky-900: #c8e8fa;
+  --color-sky-950: #e3f3fc;
+
+  --color-red-50: #2c1214;
+  --color-red-100: #3d1a1d;
+  --color-red-200: #5a2428;
+  --color-red-300: #8a3238;
+  --color-red-400: #ef6b6b;
+  --color-red-600: #ef6b6b;
+  --color-red-700: #f58a8a;
+  --color-red-800: #f9a9a9;
+  --color-red-900: #fcc8c8;
+  --color-red-950: #fde3e3;
+
+  --shadow-card: 0 1px 0 rgb(0 0 0 / 0.3), 0 1px 3px rgb(0 0 0 / 0.4);
+  --shadow-pop: 0 14px 36px rgb(0 0 0 / 0.6);
+}
+
+/* White is also the colour of text on solid brand/status fills, so only its use as a background changes. */
+:root[data-theme='dark'] .bg-white {
+  background-color: var(--surface);
+}
+:root[data-theme='dark'] .ring-white {
+  --tw-ring-color: var(--surface);
+}
+:root[data-theme='dark'] .border-white {
+  border-color: var(--surface);
+}
+:root[data-theme='dark'] ::selection {
+  background: var(--color-brand-200);
+}
+
+/* Solid fills keep their depth in dark mode: the scale above is tuned for text, these are for white-on-colour. */
+:root[data-theme='dark'] .bg-red-700 {
+  background-color: #b42318;
+}
+:root[data-theme='dark'] .hover\:bg-red-800:hover {
+  background-color: #912018;
+}
+:root[data-theme='dark'] .disabled\:bg-red-300:disabled {
+  background-color: #5a2428;
+}
+:root[data-theme='dark'] .bg-amber-600 {
+  background-color: #b45309;
+}
+:root[data-theme='dark'] .hover\:bg-brand-700:hover {
+  background-color: #a11d3b;
+}
+:root[data-theme='dark'] .disabled\:bg-brand-300:disabled {
+  background-color: #5c2433;
+}
+
+/*
+ * The sidebar and the sign-in brand panel are dark in both themes. Re-declaring the original scales
+ * inside them stops the dark theme's inversion from turning them light.
+ */
+.palette-fixed {
+  --color-stone-50: #faf6f0;
+  --color-stone-100: #f3ece2;
+  --color-stone-200: #e7ddcf;
+  --color-stone-300: #d4c7b4;
+  --color-stone-400: #a99c89;
+  --color-stone-500: #85796a;
+  --color-stone-600: #655a4e;
+  --color-stone-700: #4d433a;
+  --color-stone-800: #372f28;
+  --color-stone-900: #261e19;
+  --color-stone-950: #17110e;
+  --color-brand-50: #fdf1f2;
+  --color-brand-100: #fadde1;
+  --color-brand-200: #f4b9c2;
+  --color-brand-300: #ea8b9b;
+  --color-brand-400: #db5a73;
+  --color-brand-500: #c2304f;
+  --color-brand-600: #a11d3b;
+  --color-brand-700: #851731;
+  --color-brand-800: #6b1429;
+  --color-brand-900: #4f101f;
+}
